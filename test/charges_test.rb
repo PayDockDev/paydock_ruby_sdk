@@ -42,4 +42,13 @@ class TestAdd < Test::Unit::TestCase
 		assert_equal status, 201
 	end
 
+	def test_create_strip_connection_charge
+		token_response = Tokens.create_token(Paydock.stripe,"Test Name","5520000000000000","2020","05","123")
+		token = JSON.parse(token_response)['resource']['data']
+		charge_response = PayDock::Charges.create_stripe_connection_charge("10","AUD",Paydock.stripe,"4",Paydock.stripe,"6",Paydock.stripe,token)
+		puts charge_response
+		status = JSON.parse(charge_response)['status']
+		assert_equal status, 201
+	end
+
 end

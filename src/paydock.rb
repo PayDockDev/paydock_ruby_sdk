@@ -15,8 +15,8 @@ module Paydock
 	def self.braintree(); braintree = "5a5445d65e1032728704473a";end
 	def self.stripe(); stripe = "5a39b8e723441f4f07c045d3";end
 
-	def self.stripe_destination_account_1(); stripe_destination_account_1 = "";end
-	def self.stripe_destination_account_2(); stripe_destination_account_2 = "";end
+	def self.stripe_destination_account_1(); stripe_destination_account_1 = "5a39b8e723441f4f07c045d3";end
+	def self.stripe_destination_account_2(); stripe_destination_account_2 = "5a39b8e723441f4f07c045d3";end
 
 	def self.content(); content = "application/json";end
 	def self.header(); header = {'x-user-secret-key' => Paydock.secretKey, 'Content-type' => Paydock.content}; end

@@ -92,5 +92,27 @@ module PayDock
 			}
 			add_charge(body)
 		end
+
+		def self.create_stripe_connection_charge(amount,currency,stripe_transfer_group_id,amount1,stripe_account_id_1,amount2,stripe_account_id_2,token)
+			body = {
+				:amount => amount,
+				:currency => currency,
+				:transfer => {
+					:stripe_transfer_group => stripe_transfer_group_id,
+					:items => [{
+						:amount1 => amount1,
+						:currency => currency,
+						:destination => stripe_account_id_1
+						},
+						{
+							:amount2 => amount2,
+							:currency => currency,
+							:destination => stripe_account_id_2
+							}]
+				},
+				:token => token
+			}
+			add_charge(body)
+		end
 	end
 end
