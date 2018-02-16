@@ -17,6 +17,12 @@ end
 
 def authorise(body)
 	url = Config.baseURL
-	uri = url+"charges/"
+	uri = url+"charges/?capture=false"
+	ServiceHelper.callPaydock(uri,HTTP_method.POST,body)
+end
+
+def capture(body,id)
+	url = Config.baseURL
+	uri = url+"charges/"+id+"/capture"
 	ServiceHelper.callPaydock(uri,HTTP_method.POST,body)
 end
