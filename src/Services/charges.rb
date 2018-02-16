@@ -97,7 +97,7 @@ module PayDock
 			body = {
 				:amount => amount,
 				:currency => currency,
-				:transfer => {
+				:transfers => {
 					:stripe_transfer_group => stripe_transfer_group_id,
 					:items => [{
 						:amount1 => amount1,
