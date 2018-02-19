@@ -14,7 +14,7 @@ class ServiceHelper
 		when "PUT"
 			request = HttpMethod.PUT(uri,Paydock.header)
 		when "DELETE"
-			request = HttpMethod.GET(uri,Paydock.header)
+			request = HttpMethod.DELETE(uri,Paydock.header)
 		end
 		HTTPmethod.httpmethod(uri,Paydock.header,body, request)
 	end

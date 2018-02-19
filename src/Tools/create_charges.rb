@@ -26,3 +26,9 @@ def capture(body,id)
 	uri = url+"charges/"+id+"/capture"
 	ServiceHelper.callPaydock(uri,HTTP_method.POST,body)
 end
+
+def cancel_authorised(body,id)
+	url = Config.baseURL
+	uri = url+"charges/"+id+"/capture"
+	ServiceHelper.callPaydock(uri,HTTP_method.DELETE,body)
+end

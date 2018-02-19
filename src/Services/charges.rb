@@ -121,5 +121,10 @@ module PayDock
 			}
 			capture(body,charge_id)
 		end
+
+		def self.cancel_authorised_charge(charge_id)
+			body = {}
+			cancel_authorised(body,charge_id)
+		end
 	end
 end
