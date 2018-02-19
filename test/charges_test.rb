@@ -66,4 +66,10 @@ class TestAdd < Test::Unit::TestCase
 		assert_equal status, 200
 	end
 
+	def test_get_charges_list
+		charge_response = PayDock::Charges.get_charges_list()
+		status = JSON.parse(charge_response)['status']
+		assert_equal status, 200
+	end
+
 end

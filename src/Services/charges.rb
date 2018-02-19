@@ -126,5 +126,10 @@ module PayDock
 			body = {}
 			cancel_authorised(body,charge_id)
 		end
+
+		def self.get_charges_list()
+			body = {}
+			get_charges(body)
+		end
 	end
 end
