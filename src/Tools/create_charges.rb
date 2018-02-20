@@ -14,7 +14,7 @@ def add_charge(body)
 	ServiceHelper.callPaydock(uri,HTTP_method.POST, body)
 end
 
-def authorise(body)
+def authorise_charge(body)
 	url = Config.baseURL
 	uri = url+"charges/?capture=false"
 	ServiceHelper.callPaydock(uri,HTTP_method.POST,body)
