@@ -1,4 +1,3 @@
-require_relative "../paydock"
 require_relative "http_method"
 require_relative "http_request"
 require_relative "../Services/config"

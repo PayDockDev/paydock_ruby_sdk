@@ -1,15 +1,12 @@
 require 'net/http'
 require 'uri'
 require 'json'
-require_relative '../paydock'
 require_relative "../Tools/create_charges"
 require_relative '../Tools/http_request'
 require_relative "../Tools/http_method"
 require_relative "config"
 require_relative "environment"
 require_relative "payment_type"
-
-Config.initialise(Environment.Sandbox,Paydock.secretKey,Paydock.publicKey)
 
 module PayDock
 	class Charges

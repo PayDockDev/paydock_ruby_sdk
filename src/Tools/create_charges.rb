@@ -1,7 +1,6 @@
 require "net/http"
 require 'uri'
 require 'json'
-require_relative '../paydock'
 require_relative 'http_request'
 require_relative "http_method"
 require_relative "service_helper"

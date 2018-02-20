@@ -1,9 +1,14 @@
 require "test/unit"
 require_relative "../src/Services/charges"
 require_relative "../src/Services/tokens"
-require_relative "../src/paydock"
+require_relative "./config/paydock"
 
 class TestAdd < Test::Unit::TestCase
+
+	def setup
+		Config.initialise(Environment.Sandbox,Paydock.secretKey,Paydock.publicKey)
+	end
+
 	def test_charge
 		charge_response = PayDock::Charges.create_with_credit_card(gateway_id:Paydock.nab,amount:"10",currency:"AUD",card_number:"4242424242424242",expire_year:"2020",expire_month:"05",card_ccv:"123",description:"$10 charged")
 		status = JSON.parse(charge_response)['status']
