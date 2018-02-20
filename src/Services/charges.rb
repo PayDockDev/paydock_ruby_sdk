@@ -77,14 +77,24 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_basic_charge_authorisation(gateway_id,amount,currency,creditCardNumber,expire_year,expire_month,card_ccv)
+		def self.create_basic_charge_authorisation(gateway_id:"",amount:"",currency:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
+				:reference => reference,
+				:description => description,
 				:customer => {
+					:first_name => first_name,
+					:last_name => last_name,
+					:email => email,
 					:payment_source => {
+						:address_line1 => address_line1,
+						:address_line2 => address_line2,
+						:address_city => address_city,
+						:address_country => address_country,
+						:address_postcode => address_postcode,
 						:gateway_id => gateway_id,
-						:card_number => creditCardNumber,
+						:card_number => card_number,
 						:expire_month => expire_month,
 						:expire_year => expire_year,
 						:card_ccv => card_ccv
