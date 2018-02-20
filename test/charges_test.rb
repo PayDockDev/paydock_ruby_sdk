@@ -37,7 +37,7 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_charge_by_non_default_payment_source
-		charge_response = PayDock::Charges.charge_with_non_default_payment_source("1","AUD","5a70f7385f283b7e1e0388b7","5a70f7265f283b7e1e0388b5")
+		charge_response = PayDock::Charges.charge_with_non_default_payment_source(amount:"1",currency:"AUD",customer_id:"5a70f7385f283b7e1e0388b7",payment_source_id:"5a70f7265f283b7e1e0388b5")
 		status = JSON.parse(charge_response)['status']
 		assert_equal status, 201
 	end

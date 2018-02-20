@@ -115,12 +115,14 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.charge_with_non_default_payment_source(amount,currency,customer_id,payment_source_id)
+		def self.charge_with_non_default_payment_source(amount:"",currency:"",customer_id:"",payment_source_id:"",description:"",reference:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
 				:customer_id => customer_id,
-				:payment_source_id => payment_source_id
+				:payment_source_id => payment_source_id,
+				:description => description,
+				:reference => reference
 			}
 			add_charge(body)
 		end
