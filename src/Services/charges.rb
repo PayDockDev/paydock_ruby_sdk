@@ -22,15 +22,20 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_with_credit_card(gateway_id,amount,currency,creditCardNumber,expire_year,expire_month,card_ccv)
+		def self.create_with_credit_card(gateway_id:"",amount:"",currency:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
+				:reference => reference,
+				:description => description,
 				:customer => {
+					:first_name => first_name,
+					:last_name => last_name,
+					:email => email,
 					:payment_source => {
 						:gateway_id => gateway_id,
 						:type => PaymentType.card,
-						:card_number => creditCardNumber,
+						:card_number => card_number,
 						:expire_month => expire_month,
 						:expire_year => expire_year,
 						:card_ccv => card_ccv
