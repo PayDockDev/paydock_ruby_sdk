@@ -127,7 +127,7 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_stripe_connection_charge(amount,currency,stripe_transfer_group_id,amount1,stripe_account_id_1,amount2,stripe_account_id_2,token)
+		def self.create_stripe_connection_charge(amount:0,currency:"",stripe_transfer_group_id:"",amount1:0,stripe_account_id_1:"",amount2:0,stripe_account_id_2:"",token:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
