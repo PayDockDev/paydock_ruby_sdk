@@ -59,9 +59,9 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_cancel_authorised_charge
-		basic_charge = PayDock::Charges.create_basic_charge_authorisation(Paydock.stripe,"10","AUD","4242424242424242","2020","05","123")
+		basic_charge = PayDock::Charges.create_basic_charge_authorisation(gateway_id:Paydock.stripe,amount:"10",currency:"AUD",card_number:"4242424242424242",expire_year:"2020",expire_month:"05",card_ccv:"123")
 		charge_id = JSON.parse(basic_charge)['resource']['data']['_id']
-		charge_response = PayDock::Charges.cancel_authorised_charge(charge_id)
+		charge_response = PayDock::Charges.cancel_authorised_charge(charge_id:charge_id)
 		status = JSON.parse(charge_response)['status']
 		assert_equal status, 200
 	end
