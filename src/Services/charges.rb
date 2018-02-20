@@ -149,7 +149,7 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.capture_charge(amount,charge_id)
+		def self.capture_charge(amount:"",charge_id:"")
 			body = {
 				:amount => amount
 			}
