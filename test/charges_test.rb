@@ -31,7 +31,7 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_charge_by_id
-		charge_response = PayDock::Charges.charge_by_id("1","AUD","5a70f7385f283b7e1e0388b7")
+		charge_response = PayDock::Charges.charge_by_id(amount:"1",currency:"AUD",customer_id:"5a70f7385f283b7e1e0388b7")
 		status = JSON.parse(charge_response)['status']
 		assert_equal status, 201
 	end

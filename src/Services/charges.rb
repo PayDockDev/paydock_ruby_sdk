@@ -104,11 +104,13 @@ module PayDock
 			authorise(body)
 		end
 
-		def self.charge_by_id(amount,currency,customer_id)
+		def self.charge_by_id(amount:"",currency:"",customer_id:"",description:"",reference:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
-				:customer_id => customer_id
+				:customer_id => customer_id,
+				:description => description,
+				:reference => reference
 			}
 			add_charge(body)
 		end
