@@ -19,7 +19,7 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_bank_charge
-		charge_response = PayDock::Charges.create_bank_charge(Paydock.westpac,"1","AUD","Test Name","064000","064000")
+		charge_response = PayDock::Charges.create_bank_charge(gateway_id:Paydock.westpac,amount:"1",currency:"AUD",account_name:"Test Name",account_bsb:"064000",account_number:"064000")
 		status = JSON.parse(charge_response)['status']
 		assert_equal status, 201
 	end
@@ -43,7 +43,7 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_create_strip_connection_charge
-		token_response = Tokens.create_token(Paydock.authorize,"Test Name","5520000000000000","2020","05","123")
+		token_response = Tokens.create_token(gateway_id:Paydock.authorize,card_name:"Test Name",card_number:"5520000000000000",expire_year:"2020",expire_month:"05",card_ccv:"123")
 		token = JSON.parse(token_response)['resource']['data']
 		charge_response = PayDock::Charges.create_stripe_connection_charge(100,"AUD",Paydock.stripe,40,Paydock.stripe_destination_account_1,60,Paydock.stripe_destination_account_2,token)
 		status = JSON.parse(charge_response)['status']

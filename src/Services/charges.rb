@@ -22,7 +22,7 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_with_credit_card(gateway_id:"",amount:"",currency:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"")
+		def self.create_with_credit_card(gateway_id:"",amount:"",currency:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
@@ -33,6 +33,11 @@ module PayDock
 					:last_name => last_name,
 					:email => email,
 					:payment_source => {
+						:address_line1 => address_line1,
+						:address_line2 => address_line2,
+						:address_city => address_city,
+						:address_country => address_country,
+						:address_postcode => address_postcode,
 						:gateway_id => gateway_id,
 						:type => PaymentType.card,
 						:card_number => card_number,
@@ -45,12 +50,22 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_bank_charge(gateway_id,amount,currency,account_name,account_bsb,account_number)
+		def self.create_bank_charge(gateway_id:"",amount:"",currency:"",account_name:"",account_bsb:"",account_number:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
+				:reference => reference,
+				:description => description,
 				:customer => {
+					:first_name => first_name,
+					:last_name => last_name,
+					:email => email,
 					:payment_source => {
+						:address_line1 => address_line1,
+						:address_line2 => address_line2,
+						:address_city => address_city,
+						:address_country => address_country,
+						:address_postcode => address_postcode,
 						:gateway_id => gateway_id,
 						:type => PaymentType.bsb,
 						:account_name => account_name,
