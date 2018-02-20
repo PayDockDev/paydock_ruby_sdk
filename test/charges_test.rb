@@ -11,9 +11,9 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_charge_by_token
-		token_response = Tokens.create_token(Paydock.authorize,"Test Name","5520000000000000","2020","05","123")
+		token_response = Tokens.create_token(gateway_id:Paydock.authorize,card_name:"Test Name",card_number:"5520000000000000",expire_year:"2020",expire_month:"05",card_ccv:"123")
 		token = JSON.parse(token_response)['resource']['data']
-		charge_response = PayDock::Charges.charge_with_token(1,"AUD",token)
+		charge_response = PayDock::Charges.charge_with_token(amount:1,currency:"AUD",token:token)
 		status = JSON.parse(charge_response)['status']
 		assert_equal status, 201
 	end

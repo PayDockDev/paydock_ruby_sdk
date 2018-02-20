@@ -13,7 +13,7 @@ Config.initialise(Environment.Sandbox,Paydock.secretKey,Paydock.publicKey)
 
 module PayDock
 	class Charges
-		def self.charge_with_token(amount, currency, token)
+		def self.charge_with_token(amount:0, currency:"", token:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
