@@ -19,7 +19,7 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_with_credit_card(gateway_id,amount,currency,card_number,expire_year,expire_month,card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
+		def self.create_with_credit_card(gateway_id, amount, currency, card_number, expire_year, expire_month, card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
@@ -47,7 +47,7 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_with_bank_account(gateway_id:"",amount:"",currency:"",account_name:"",account_bsb:"",account_number:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
+		def self.create_with_bank_account(gateway_id,amount,currency,account_name,account_bsb,account_number,description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
@@ -74,7 +74,8 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.authorise(gateway_id:"",amount:"",currency:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
+		# TODO: work out what to do with this, to see whether we need to support by token and by customer
+		def self.authorise(gateway_id,amount,currency,card_number,expire_year,expire_month,card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
@@ -101,7 +102,8 @@ module PayDock
 			authorise_charge(body)
 		end
 
-		def self.charge_by_id(amount:"",currency:"",customer_id:"",description:"",reference:"")
+		# TODO: check whether we need extra fields for this
+		def self.charge_with_customer(amount,currency,customer_id,description:"",reference:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
@@ -112,7 +114,8 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.charge_with_non_default_payment_source(amount:"",currency:"",customer_id:"",payment_source_id:"",description:"",reference:"")
+		# TODO: check whether we need extra fields for this
+		def self.charge_with_customer_payment_source(amount,currency,customer_id, payment_source_id,description:"",reference:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
