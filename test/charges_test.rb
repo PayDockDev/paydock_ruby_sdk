@@ -10,7 +10,7 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_charge
-		charge_response = PayDock::Charges.create_with_credit_card(gateway_id:Paydock.nab,amount:"10",currency:"AUD",card_number:"4242424242424242",expire_year:"2020",expire_month:"05",card_ccv:"123",description:"$10 charged")
+		charge_response = PayDock::Charges.create_with_credit_card(Paydock.nab,"10","AUD","4242424242424242","2020","05",card_ccv:"123",description:"$10 charged")
 		status = JSON.parse(charge_response)['status']
 		assert_equal status, 201
 	end

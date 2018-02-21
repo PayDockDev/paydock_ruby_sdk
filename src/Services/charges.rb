@@ -19,7 +19,7 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_with_credit_card(gateway_id:"",amount:"",currency:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
+		def self.create_with_credit_card(gateway_id,amount,currency,card_number,expire_year,expire_month,card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
