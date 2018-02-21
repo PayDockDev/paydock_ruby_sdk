@@ -127,36 +127,40 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.create_stripe_connection_charge(amount:0,currency:"",stripe_transfer_group_id:"",amount1:0,stripe_account_id_1:"",amount2:0,stripe_account_id_2:"",token:"")
+		# TODO: this isn't right. We need to support each of the different transfer options for stripe connect, not just 2. We also need to support more than just using a token
+		def self.create_stripe_connection_charge(amount,currency,stripe_transfer_group_id, token, amount1:0,stripe_account_id_1:"",amount2:0,stripe_account_id_2:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
+				:token => token,
 				:transfers => {
 					:stripe_transfer_group => stripe_transfer_group_id,
 					:items => [{
-						:amount1 => amount1,
-						:currency => currency,
-						:destination => stripe_account_id_1
+							:amount1 => amount1,
+							:currency => currency,
+							:destination => stripe_account_id_1
 						},
 						{
 							:amount2 => amount2,
 							:currency => currency,
 							:destination => stripe_account_id_2
-							}]
-				},
-				:token => token
+						}]
+				}
 			}
+
+			print body
 			add_charge(body)
 		end
 
-		def self.capture_charge(amount:"",charge_id:"")
+		def self.capture_charge(charge_id, amount:"")
+			# TODO: check what happens if the amount isn't sent through. We shouldn't send through a body if the amount isn't provided
 			body = {
 				:amount => amount
 			}
 			capture(body,charge_id)
 		end
 
-		def self.cancel_authorised_charge(charge_id:"")
+		def self.cancel_authorised_charge(charge_id)
 			body = {}
 			cancel_authorised(body,charge_id)
 		end

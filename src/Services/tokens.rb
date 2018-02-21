@@ -9,7 +9,7 @@ require_relative "config"
 require_relative "environment"
 
 class Tokens
-	def self.create_token(gateway_id:"",card_name:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"")
+	def self.create_token(gateway_id,card_name,card_number,expire_year,expire_month,card_ccv:"")
 		body = {
 			:gateway_id => gateway_id,
 			:card_name => card_name,
