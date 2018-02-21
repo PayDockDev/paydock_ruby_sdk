@@ -147,8 +147,6 @@ module PayDock
 						}]
 				}
 			}
-
-			print body
 			add_charge(body)
 		end
 

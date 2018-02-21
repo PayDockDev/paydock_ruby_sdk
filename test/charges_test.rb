@@ -48,10 +48,9 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_create_stripe_connection_charge
-		token_response = Tokens.create_token(Paydock.stripe,"4242424242424242","2020","05",card_ccv:"123")
+		token_response = Tokens.create_token(Paydock.stripe,"Test Name","4242424242424242","2020","05",card_ccv:"123")
 		token = JSON.parse(token_response)['resource']['data']
-		charge_response = PayDock::Charges.create_stripe_connection_charge(100, "AUD", Paydock.stripe, token,amount1:40, stripe_account_id_1:Paydock.stripe_destination_account_1,amount2:60,stripe_account_id_2:Paydock.stripe_destination_account_2)
-		print charge_response
+		charge_response = PayDock::Charges.create_stripe_connection_charge(100, "AUD", Paydock.stripe,token,amount1:40, stripe_account_id_1:Paydock.stripe_destination_account_1,amount2:60,stripe_account_id_2:Paydock.stripe_destination_account_2)
 		status = JSON.parse(charge_response)['status']
 		assert_equal 201, status
 	end
