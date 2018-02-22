@@ -102,6 +102,18 @@ module PayDock
 			authorise_charge(body)
 		end
 
+		def self.authorise_with_customer(amount,currency,customer_id:"",token:"",description:"",reference:"")
+			body = {
+				:amount => amount,
+				:currency => currency,
+				:customer_id => customer_id,
+				:token => token,
+				:description => description,
+				:reference => reference
+			}
+			authorise_charge(body)
+		end
+
 		# TODO: check whether we need extra fields for this
 		def self.charge_with_customer(amount,currency,customer_id,description:"",reference:"")
 			body = {

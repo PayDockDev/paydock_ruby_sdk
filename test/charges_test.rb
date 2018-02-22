@@ -35,6 +35,20 @@ class TestAdd < Test::Unit::TestCase
 		assert_equal 201, status
 	end
 
+	def test_authorise_charge_with_customer
+		charge_response = PayDock::Charges.authorise_with_customer("1","AUD",customer_id:"5a8e1c0840edcc4a818b661e")
+		status = JSON.parse(charge_response)['status']
+		assert_equal 201, status
+	end
+
+	def test_authorise_charge_with_token
+		token_response = Tokens.create_token(Paydock.stripe,"Test Name","4242424242424242","2020","05",card_ccv:"123")
+		token = JSON.parse(token_response)['resource']['data']
+		charge_response = PayDock::Charges.authorise_with_customer("1","AUD",token:token)
+		status = JSON.parse(charge_response)['status']
+		assert_equal 201, status
+	end
+
 	def test_charge_by_id
 		charge_response = PayDock::Charges.charge_with_customer("1","AUD","5a70f7385f283b7e1e0388b7")
 		status = JSON.parse(charge_response)['status']
