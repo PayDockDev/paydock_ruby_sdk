@@ -75,12 +75,14 @@ module PayDock
 		end
 
 		# TODO: work out what to do with this, to see whether we need to support by token and by customer
-		def self.authorise(gateway_id,amount,currency,card_number,expire_year,expire_month,card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
+		def self.authorise(amount,currency,customer_id:"",token:"",gateway_id:"",card_number:"",expire_year:"",expire_month:"",card_ccv:"",description:"",reference:"",first_name:"",last_name:"",email:"",address_line1:"",address_line2:"",address_city:"",address_country:"",address_postcode:"")
 			body = {
 				:amount => amount,
 				:currency => currency,
-				:reference => reference,
+				:customer_id => customer_id,
+				:token => token,
 				:description => description,
+				:reference => reference,
 				:customer => {
 					:first_name => first_name,
 					:last_name => last_name,
@@ -98,18 +100,6 @@ module PayDock
 						:card_ccv => card_ccv
 					}
 				}
-			}
-			authorise_charge(body)
-		end
-
-		def self.authorise_with_customer(amount,currency,customer_id:"",token:"",description:"",reference:"")
-			body = {
-				:amount => amount,
-				:currency => currency,
-				:customer_id => customer_id,
-				:token => token,
-				:description => description,
-				:reference => reference
 			}
 			authorise_charge(body)
 		end

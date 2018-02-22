@@ -26,17 +26,17 @@ class TestAdd < Test::Unit::TestCase
 	def test_bank_charge
 		charge_response = PayDock::Charges.create_with_bank_account(Paydock.westpac,"1","AUD","Test Name","064000","064000")
 		status = JSON.parse(charge_response)['status']
-		assert_equal status, 201
+		assert_equal 201, status
 	end
 
 	def test_authorise_charge
-		charge_response = PayDock::Charges.authorise(Paydock.stripe,"10","AUD","4242424242424242","2020","05",card_ccv:"123")
+		charge_response = PayDock::Charges.authorise("1","AUD",gateway_id:Paydock.stripe,card_number:"4242424242424242",expire_year:"2020",expire_month:"05",card_ccv:"123")
 		status = JSON.parse(charge_response)['status']
 		assert_equal 201, status
 	end
 
 	def test_authorise_charge_with_customer
-		charge_response = PayDock::Charges.authorise_with_customer("1","AUD",customer_id:"5a8e1c0840edcc4a818b661e")
+		charge_response = PayDock::Charges.authorise("1","AUD",customer_id:"5a8e1c0840edcc4a818b661e")
 		status = JSON.parse(charge_response)['status']
 		assert_equal 201, status
 	end
@@ -44,7 +44,7 @@ class TestAdd < Test::Unit::TestCase
 	def test_authorise_charge_with_token
 		token_response = Tokens.create_token(Paydock.stripe,"Test Name","4242424242424242","2020","05",card_ccv:"123")
 		token = JSON.parse(token_response)['resource']['data']
-		charge_response = PayDock::Charges.authorise_with_customer("1","AUD",token:token)
+		charge_response = PayDock::Charges.authorise("1","AUD",token:token)
 		status = JSON.parse(charge_response)['status']
 		assert_equal 201, status
 	end
@@ -70,7 +70,7 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_capture_charge
-		basic_charge = PayDock::Charges.authorise(Paydock.stripe,"10","AUD","4242424242424242","2020","05",card_ccv:"123")
+		basic_charge = PayDock::Charges.authorise("1","AUD",gateway_id:Paydock.stripe,card_number:"4242424242424242",expire_year:"2020",expire_month:"05",card_ccv:"123")
 		charge_id = JSON.parse(basic_charge)['resource']['data']['_id']
 		charge_response = PayDock::Charges.capture_charge(charge_id, amount:"10")
 		status = JSON.parse(charge_response)['status']
@@ -78,7 +78,7 @@ class TestAdd < Test::Unit::TestCase
 	end
 
 	def test_cancel_authorised_charge
-		basic_charge = PayDock::Charges.authorise(Paydock.stripe,"10","AUD","4242424242424242","2020","05",card_ccv:"123")
+		basic_charge = PayDock::Charges.authorise("1","AUD",gateway_id:Paydock.stripe,card_number:"4242424242424242",expire_year:"2020",expire_month:"05",card_ccv:"123")		
 		charge_id = JSON.parse(basic_charge)['resource']['data']['_id']
 		charge_response = PayDock::Charges.cancel_authorised_charge(charge_id)
 		status = JSON.parse(charge_response)['status']
