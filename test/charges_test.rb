@@ -72,7 +72,7 @@ class TestAdd < Test::Unit::TestCase
 	def test_capture_charge
 		basic_charge = PayDock::Charges.authorise("1","AUD",gateway_id:Paydock.stripe,card_number:"4242424242424242",expire_year:"2020",expire_month:"05",card_ccv:"123")
 		charge_id = JSON.parse(basic_charge)['resource']['data']['_id']
-		charge_response = PayDock::Charges.capture_charge(charge_id, amount:"10")
+		charge_response = PayDock::Charges.capture_charge(charge_id)
 		status = JSON.parse(charge_response)['status']
 		assert_equal 201, status
 	end

@@ -152,11 +152,9 @@ module PayDock
 			add_charge(body)
 		end
 
-		def self.capture_charge(charge_id, amount:"")
+		def self.capture_charge(charge_id)
 			# TODO: check what happens if the amount isn't sent through. We shouldn't send through a body if the amount isn't provided
-			body = {
-				:amount => amount
-			}
+			body = {}
 			capture(body,charge_id)
 		end
 
