@@ -130,7 +130,7 @@ module PayDock
 		end
 
 		# TODO: this isn't right. We need to support each of the different transfer options for stripe connect, not just 2. We also need to support more than just using a token
-		def self.create_stripe_connection_charge(amount,currency,stripe_transfer_group_id, token,reference:nil,description:nil, amount1:0,stripe_account_id_1:"",amount2:0,stripe_account_id_2:"",stripe_direct_account_id:nil,stripe_application_fee:nil,stripe_destination_account_id:nil,stripe_destination_amount:nil,securepay_fraud_guard:nil,ip_address:nil)
+		def self.create_stripe_connection_charge(amount,currency,stripe_transfer_group_id, token,items,reference:nil,description:nil,stripe_direct_account_id:nil,stripe_application_fee:nil,stripe_destination_account_id:nil,stripe_destination_amount:nil,securepay_fraud_guard:nil,ip_address:nil)
 			body = {
 				:amount => amount,
 				:currency => currency,
@@ -147,16 +147,7 @@ module PayDock
 				},
 				:transfers => {
 					:stripe_transfer_group => stripe_transfer_group_id,
-					:items => [{
-							:amount1 => amount1,
-							:currency => currency,
-							:destination => stripe_account_id_1
-						},
-						{
-							:amount2 => amount2,
-							:currency => currency,
-							:destination => stripe_account_id_2
-						}]
+					:items => items
 				}				
 			}
 			add_charge(body)
