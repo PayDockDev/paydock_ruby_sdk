@@ -1,4 +1,4 @@
-module Paydock
+module PayDockTestConf
 	def self.secretKey(); secretKey = "bf05dc59f637a712c900716c868ca7f9f231b3a7";end
 	def self.publicKey(); publicKey = "f4a3c72bb6bbccb3f612c30ac9496fbb16d2caec";end
 
