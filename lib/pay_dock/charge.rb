@@ -2,10 +2,14 @@ module PayDock
   class Charge
     class << self
       def call_pay_dock(action, args = {})
+        if PayDock.sandbox && !(args.dig(:body, :customer, :payment_source) || {}).keys.index {|k| k.to_s.match(/^card_/)}.nil?
+          throw "You should avoid handling any card details, use paydock.js to generate a single use token"
+        end
+
         response = PayDock::ServiceHelper.call_pay_dock(action, {
           service_path: '/charges'
         }.merge(args))
-        response_data = response.dig(:data, :resource, :data)
+        response_data = response.dig(:resource, :data)
         response_data.kind_of?(Hash) ? response.merge({charge_id: response_data[:_id]}) : response
       end
 

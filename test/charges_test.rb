@@ -1,36 +1,7 @@
 require "test/unit"
 require "paydock_ruby_sdk"
 require_relative "./config/paydock"
-
-def helper_tokenize_card(args = {})
-  PayDock.currency = "AUD"
-  token_response = PayDock::Token.create({
-    card_name: "Test Name",
-    card_number: "4242424242424242",
-    expire_year: "2050",
-    expire_month: "05",
-    card_ccv: "123"
-  }.merge(args))
-  assert_equal 201, token_response[:http_status]
-  assert_equal token_response.dig(:data, :resource, :data), token_response[:token]
-
-  token_response[:token]
-end
-
-def helper_create_customer(args = {})
-  cust_response = PayDock::Customer.create({
-    token: helper_tokenize_card(),
-    address_line1: "12345 High Rd.",
-    address_line2: "Unit 987",
-    address_city: "Lake Town",
-    address_country: "Test Country",
-    address_postcode: "V2A 2L2",
-  }.merge(args))
-  assert_equal 201, cust_response[:http_status]
-  cust_response[:customer_id]
-end
-
-
+require_relative "./support/helpers"
 
 class TestAdd < Test::Unit::TestCase
 
@@ -47,7 +18,7 @@ class TestAdd < Test::Unit::TestCase
       amount: 111,
       token: helper_tokenize_card()
     )
-    assert_equal 201, charge_response[:http_status]
+    assert_equal 201, charge_response[:status]
   end
 
   def test_token_then_charge_authorise
@@ -57,7 +28,7 @@ class TestAdd < Test::Unit::TestCase
       amount: 111,
       token: helper_tokenize_card(card_number: "5520000000000000")
     )
-    assert_equal 201, charge_response[:http_status]
+    assert_equal 201, charge_response[:status]
   end
 
   def test_authorise_then_capture
@@ -67,14 +38,14 @@ class TestAdd < Test::Unit::TestCase
       amount: 111,
       token: helper_tokenize_card()
     )
-    assert_equal 201, authorise_resp[:http_status]
-    assert_equal "pending", authorise_resp.dig(:data, :resource, :data, :status)
-    assert_equal false,     authorise_resp.dig(:data, :resource, :data, :capture)
+    assert_equal 201, authorise_resp[:status]
+    assert_equal "pending", authorise_resp.dig(:resource, :data, :status)
+    assert_equal false,     authorise_resp.dig(:resource, :data, :capture)
 
     capture_resp = PayDock::Charge.capture(id: authorise_resp[:charge_id])
-    assert_equal 201, capture_resp[:http_status]
-    # assert_equal true, capture_resp.dig(:data, :resource, :data, :capture) -> still false for some reason
-    assert_equal "complete", capture_resp.dig(:data, :resource, :data, :status)
+    assert_equal 201, capture_resp[:status]
+    # assert_equal true, capture_resp.dig(:resource, :data, :capture) -> still false for some reason
+    assert_equal "complete", capture_resp.dig(:resource, :data, :status)
   end
 
   def test_charge_after_create_customer
@@ -85,15 +56,15 @@ class TestAdd < Test::Unit::TestCase
       amount: 123,
       customer_id: customer_id,
     )
-    assert_equal 201, charge_response[:http_status]
+    assert_equal 201, charge_response[:status]
 
     # A few other checks here that the payment source lines up (ensuring the customer & charge are indeed linked)
     cust_fetch_response   = PayDock::Customer.get(id: customer_id)
     charge_fetch_response = PayDock::Charge.get(id: charge_response[:charge_id])
-    assert_equal charge_response.dig(:data, :resource, :data, :customer, :payment_source, :source_id),
-                 cust_fetch_response.dig(:data, :resource, :data, :default_source)
-    assert_equal charge_response.dig(:data, :resource, :data, :customer, :payment_source, :source_id),
-                 charge_fetch_response.dig(:data, :resource, :data, :customer, :payment_source, :source_id)
+    assert_equal charge_response.dig(:resource, :data, :customer, :payment_source, :source_id),
+                 cust_fetch_response.dig(:resource, :data, :default_source)
+    assert_equal charge_response.dig(:resource, :data, :customer, :payment_source, :source_id),
+                 charge_fetch_response.dig(:resource, :data, :customer, :payment_source, :source_id)
   end
 
   def test_authorise_then_cancel
@@ -103,11 +74,11 @@ class TestAdd < Test::Unit::TestCase
       amount: 111,
       token: helper_tokenize_card()
     )
-    assert_equal 201, authorise_resp[:http_status]
+    assert_equal 201, authorise_resp[:status]
 
     cancel_resp = PayDock::Charge.cancel(id: authorise_resp[:charge_id])
-    assert_equal 200, cancel_resp[:http_status]
-    assert_equal "cancelled", cancel_resp.dig(:data, :resource, :data, :status)
+    assert_equal 200, cancel_resp[:status]
+    assert_equal "cancelled", cancel_resp.dig(:resource, :data, :status)
   end
 
   def test_authorise_charge_with_customer
@@ -118,13 +89,13 @@ class TestAdd < Test::Unit::TestCase
       amount: 123,
       customer_id: customer_id,
     )
-    assert_equal 201, authorise_resp[:http_status]
-    assert_equal "pending", authorise_resp.dig(:data, :resource, :data, :status)
+    assert_equal 201, authorise_resp[:status]
+    assert_equal "pending", authorise_resp.dig(:resource, :data, :status)
   end
 
   def test_get_charges_list
     search_response = PayDock::Charge.search()
-    assert_equal 200, search_response[:http_status]
+    assert_equal 200, search_response[:status]
   end
 
   def test_search_charges
@@ -144,25 +115,25 @@ class TestAdd < Test::Unit::TestCase
       amount: amt1,
       customer_id: customer_id,
     )
-    assert_equal 201, charge_response[:http_status]
+    assert_equal 201, charge_response[:status]
 
     charge_response = PayDock::Charge.create(
       amount: 926,
       customer_id: customer_id,
     )
-    assert_equal 201, charge_response[:http_status]
+    assert_equal 201, charge_response[:status]
 
     search_response = PayDock::Charge.search(search: fname)
-    assert_equal 200, search_response[:http_status]
-    assert_equal 2, (search_response.dig(:data, :resource, :data) || []).length
+    assert_equal 200, search_response[:status]
+    assert_equal 2, (search_response.dig(:resource, :data) || []).length
 
     search_response = PayDock::Charge.search(search: eml_u)
-    assert_equal 200, search_response[:http_status]
-    assert_equal 2, (search_response.dig(:data, :resource, :data) || []).length
+    assert_equal 200, search_response[:status]
+    assert_equal 2, (search_response.dig(:resource, :data) || []).length
 
     search_response = PayDock::Charge.search(amount: amt1)
-    assert_equal 200, search_response[:http_status]
-    assert_equal 1, (search_response.dig(:data, :resource, :data) || []).length
+    assert_equal 200, search_response[:status]
+    assert_equal 1, (search_response.dig(:resource, :data) || []).length
   end
 
 
@@ -196,16 +167,15 @@ class TestAdd < Test::Unit::TestCase
   #     }
   #   })
   #   puts "FIXME: charge1_response: #{charge1_response.inspect}"
-  #   puts "FIXME: charge1_response[:data]: #{charge1_response[:data].inspect}"
-  #   puts "FIXME: charge1_response[:data][:resource]: #{charge1_response[:data][:resource].inspect}"
-  #   assert_equal 201, charge1_response[:http_status]
+  #   puts "FIXME: charge1_response[:resource]: #{charge1_response[:resource].inspect}"
+  #   assert_equal 201, charge1_response[:status]
   #
   #   # use the customer for another charge
   #   charge2_response = PayDock::Charge.create(
   #     amount: 123,
   #     customer_id: charge1_response[:customer_id],
   #   )
-  #   assert_equal 201, charge2_response[:http_status]
+  #   assert_equal 201, charge2_response[:status]
   # end
 
   # def test_bank_charge
@@ -236,7 +206,7 @@ class TestAdd < Test::Unit::TestCase
   #     },
   #   )
   #   puts "FIXME: charge_response: #{charge_response.inspect}"
-  #   assert_equal 201, charge_response[:http_status]
+  #   assert_equal 201, charge_response[:status]
   # end
 
   # def test_bank_charge_with_token
@@ -249,13 +219,13 @@ class TestAdd < Test::Unit::TestCase
   #     account_number: "064000",
   #   )
   #   puts "FIXME: token_response: #{token_response.inspect}"
-  #   assert_equal 201, token_response[:http_status]
+  #   assert_equal 201, token_response[:status]
 
   #   charge_response = PayDock::Charge.create(
   #     amount: 7,
   #     token: token_response[:token],
   #   )
-  #   assert_equal 201, charge_response[:http_status]
+  #   assert_equal 201, charge_response[:status]
   # end
 
 

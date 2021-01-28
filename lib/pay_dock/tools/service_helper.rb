@@ -59,7 +59,7 @@ module PayDock
         result
       end
 
-      def call_pay_dock(action, args = {})
+      def call_pay_dock(action, args)
         args = validate_and_prepare!(action, args)
         http_meta = http_meta_for(action, args)
         uri = URI.parse(PayDock.baseUrl + http_meta[:path])
@@ -67,12 +67,7 @@ module PayDock
         # puts "DEBUG send_request() #{http_meta[:http_method].to_s.upcase} #{uri.request_uri}"
         # puts "DEBUG send_request() body = #{args[:body].to_json}"
         http_resp = @@connection.send_request(http_meta[:http_method].to_s.upcase, uri.request_uri, args[:body] ? args[:body].to_json : nil, self.headers.merge(args[:headers] || {}))
-        {
-          data: JSON.parse(http_resp.body, symbolize_names: true),
-          http_body: http_resp.body,
-          http_headers: http_resp.to_hash,
-          http_status: http_resp.code.to_i,
-        }
+        JSON.parse(http_resp.body, symbolize_names: true)
       end
     end
   end

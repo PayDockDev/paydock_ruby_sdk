@@ -5,7 +5,7 @@ module PayDock
         response = PayDock::ServiceHelper.call_pay_dock(action, {
           service_path: '/customers',
         }.merge(args))
-        response.merge({customer_id: response.dig(:data, :resource, :data, :_id)})
+        response.merge({customer_id: response.dig(:resource, :data, :_id)})
       end
 
       def create(body)

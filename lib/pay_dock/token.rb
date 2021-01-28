@@ -14,7 +14,7 @@ module PayDock
         }
         response = call_pay_dock(:create, {body: default_attrs.merge(body)})
         response.merge({
-          token: response.dig(:data, :resource, :data)
+          token: response.dig(:resource, :data)
         })
       end
     end
