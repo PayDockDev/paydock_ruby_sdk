@@ -6,11 +6,10 @@ module PayDock
           throw "You should avoid handling any card details, use paydock.js to generate a single use token"
         end
 
-        response = PayDock::ServiceHelper.call_pay_dock(action, {
-          service_path: '/charges'
-        }.merge(args))
+        response = PayDock::ServiceHelper.call_pay_dock(action, {service_path: '/charges'}.merge(args))
         response_data = response.dig(:resource, :data)
-        response_data.kind_of?(Hash) ? response.merge({charge_id: response_data[:_id]}) : response
+        response.merge!({charge_id: response_data[:_id]}) if response_data.kind_of?(Hash)
+        response
       end
 
       def create(body)

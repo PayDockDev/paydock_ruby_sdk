@@ -3,7 +3,7 @@ require "paydock_ruby_sdk"
 require_relative "./config/paydock"
 require_relative "./support/helpers"
 
-class TestAdd < Test::Unit::TestCase
+class ChargesTest < Test::Unit::TestCase
 
   def setup
     PayDock.sandbox = true

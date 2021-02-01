@@ -10,6 +10,10 @@ module PayDock
         }
       end
 
+      def close_connection
+        @@connection = nil
+      end
+
       def new_connection
         uri = URI.parse(PayDock.baseUrl)
         http = Net::HTTP.new(uri.host, uri.port)
@@ -63,11 +67,21 @@ module PayDock
         args = validate_and_prepare!(action, args)
         http_meta = http_meta_for(action, args)
         uri = URI.parse(PayDock.baseUrl + http_meta[:path])
-        @@connection ||= new_connection()
-        # puts "DEBUG send_request() #{http_meta[:http_method].to_s.upcase} #{uri.request_uri}"
-        # puts "DEBUG send_request() body = #{args[:body].to_json}"
-        http_resp = @@connection.send_request(http_meta[:http_method].to_s.upcase, uri.request_uri, args[:body] ? args[:body].to_json : nil, self.headers.merge(args[:headers] || {}))
-        JSON.parse(http_resp.body, symbolize_names: true)
+
+        begin
+          @@connection ||= new_connection()
+          # puts "DEBUG send_request() #{http_meta[:http_method].to_s.upcase} #{uri.request_uri}"
+          # puts "DEBUG send_request() body = #{args[:body].to_json}"
+          http_resp = @@connection.send_request(http_meta[:http_method].to_s.upcase, uri.request_uri, args[:body] ? args[:body].to_json : nil, self.headers.merge(args[:headers] || {}))
+          response_body = JSON.parse(http_resp.body, symbolize_names: true)
+        rescue Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError, Timeout::Error, Errno::ECONNRESET, SocketError => e
+          response_body = {error: {code: 'network_error', message: e.message}}
+        rescue StandardError => e
+          response_body = {error: {code: 'server_error', message: e.message}}
+        end
+
+        puts "DEBUG: error '#{response_body[:error][:message]}' '#{response_body[:error][:details]}'" if PayDock.sandbox && !PayDock.expect_error && response_body[:error]
+        response_body
       end
     end
   end

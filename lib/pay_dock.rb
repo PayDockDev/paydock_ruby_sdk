@@ -5,11 +5,11 @@ module PayDock
   }
 
   class << self
-    attr_accessor :sandbox, :secret_key, :public_key, :gateway_id, :currency
+    attr_accessor :sandbox, :secret_key, :public_key, :gateway_id, :currency, :expect_error, :custom_base_url
 
     def baseUrl
       paydockdomain = self.sandbox ? 'api-sandbox.paydock.com' : 'api.paydock.com'
-      "https://#{paydockdomain}/v1"
+      self.custom_base_url || "https://#{paydockdomain}/v1"
     end
   end
 end
