@@ -2,6 +2,7 @@ module PayDock
   PAYMENT_SOURCE_TYPES = {
     card: 'card',
     bsb: 'bsb',
+    bank_account: 'bank_account',
   }
 
   class << self
