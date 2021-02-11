@@ -71,16 +71,16 @@ module PayDock
         begin
           @@connection ||= new_connection()
           # puts "DEBUG send_request() #{http_meta[:http_method].to_s.upcase} #{uri.request_uri}"
-          # puts "DEBUG send_request() body = #{args[:body].to_json}"
+          # puts "DEBUG send_request() body = #{JSON.pretty_generate(args[:body] || {})}"
           http_resp = @@connection.send_request(http_meta[:http_method].to_s.upcase, uri.request_uri, args[:body] ? args[:body].to_json : nil, self.headers.merge(args[:headers] || {}))
           response_body = JSON.parse(http_resp.body, symbolize_names: true)
         rescue Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError, Timeout::Error, Errno::ECONNRESET, SocketError => e
-          response_body = {error: {code: 'network_error', message: e.message}}
+          response_body = {error: {code: 'network_error', message: e.message, stack_trace: e.backtrace}}
         rescue StandardError => e
-          response_body = {error: {code: 'server_error', message: e.message}}
+          response_body = {error: {code: 'server_error', message: e.message, stack_trace: e.backtrace}}
         end
 
-        puts "DEBUG: error '#{response_body[:error][:message]}' '#{response_body[:error][:details]}'" if PayDock.sandbox && !PayDock.expect_error && response_body[:error]
+        puts "DEBUG: error #{JSON.pretty_generate(response_body[:error])}" if PayDock.sandbox && !PayDock.expect_error && response_body[:error]
         response_body
       end
     end
