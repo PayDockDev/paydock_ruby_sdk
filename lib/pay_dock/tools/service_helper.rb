@@ -23,7 +23,7 @@ module PayDock
 
       def validate_and_prepare!(action, args = {})
         raise ArgumentError, "PayDock.secret_key is required" if !PayDock.secret_key
-        return args if action.to_sym == :search
+        return args if [:search, :get].include?(action.to_sym)
 
         raise ArgumentError, "PayDock.gateway_id is required" if !PayDock.gateway_id
         raise ArgumentError, "PayDock.currency is required"   if !PayDock.currency
